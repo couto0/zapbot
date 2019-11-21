@@ -1,4 +1,4 @@
 personal.py
 *.log
-mem.json
+*.json
 __pycache__/*

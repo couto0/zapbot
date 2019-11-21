@@ -53,22 +53,22 @@ def write_json(fname, jsondata):
     with open(fname, 'w') as f:
         json.dump(jsondata, f)
 
-def memorize(data):
-    mem = read_json('mem.json')
+def memorize(fname, data):
+    mem = read_json(fname + '.json')
     if data:
         mem.append(data)
         print('Armazenando:')
         print(mem)
-        write_json('mem.json', mem)
-        send_msg('Lembrete armazenado!')
+        write_json(fname + '.json', mem)
+        send_msg('ok!')
     else:
         if mem:
             for i in range(len(mem)):
                 mem[i] = '- ' + mem[i]
-            mem.insert(0, '*LEMBRETES:*')
+            mem.insert(0, '*{}*'.format(fname.upper()))
             send_msg(mem)
         else:
-            send_msg('Nenhum lembrete armazenado.')
+            send_msg('Nada armazenado.')
 
 profile = FirefoxProfile(firefox_profile_dir)
 options = Options()
@@ -101,6 +101,7 @@ time.sleep(2)
 
 print('Iniciado!')
 send_msg('Iniciado!')
+role = ''
 while 1:
     last_msg = read_last_message()
     print(last_msg)
@@ -113,6 +114,11 @@ while 1:
         if cmd == '/help':
             send_msg(help_msg)
         if cmd == '/mem':
-            memorize(data)
+            memorize('lembretes', data)
+        if cmd == '/role':
+            role = data
+            send_msg('o role do momento é *_{}_*'.format(role.upper()))
+        if cmd == '/confirmado':
+            memorize(role, data)
 
     time.sleep(3)
