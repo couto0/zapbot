@@ -10,7 +10,7 @@ import time
 import json
 
 
-headless = True
+headless = False
 firefox_profile_dir = personal.firefox_profile_dir
 msgbox_class = personal.msgbox_class
 chat_title_class = personal.chat_title_class
@@ -21,7 +21,10 @@ msg_class = personal.msg_class
 help_msg = ['Comandos disponíveis:',
             '*/help*: exibe essa mensagem',
             '*/mem*: mostra os lembretes',
-            '*/mem _LEMBRETE_*: adiciona um lembrete']
+            '*/mem _LEMBRETE_*: adiciona um lembrete',
+            '*/role _NOME DO ROLE_*: configura o role atual',
+            '*/confirmado*: mostra os confirmados no role',
+            '*/confirmado _NOME_*: confirma o nome no role']
 
 def send_msg(msg):
     msg_box = driver.find_element_by_class_name(msgbox_class)
@@ -100,10 +103,15 @@ contact.click()
 time.sleep(2)
 
 print('Iniciado!')
-send_msg('Iniciado!')
+send_msg('*começou o ataque do bot*')
+send_msg('/help para ver os comandos disponíveis')
 role = ''
+last_msg = ''
 while 1:
-    last_msg = read_last_message()
+    try:
+        last_msg = read_last_message()
+    except:
+        send_msg('buguei')
     print(last_msg)
     if last_msg[0] == '/':
         message = last_msg.split(' ', 1)
@@ -120,5 +128,16 @@ while 1:
             send_msg('o role do momento é *_{}_*'.format(role.upper()))
         if cmd == '/confirmado':
             memorize(role, data)
+        if cmd == '/send':
+            clip = driver.find_element_by_css_selector("span[data-icon='clip']")
+            clip.click()
+            image = driver.find_element_by_css_selector("input[type='image']")
+            image.sendKeys("/home/couto0/Imagens/hardmob.png\n");
+            #driver.findElement_by_cssSelector("span[data-icon='send-light']").click();
 
-    time.sleep(3)
+    if last_msg[-1] == '?':
+        if len(last_msg)%2:
+            send_msg('sim')
+        else:
+            send_msg('não')
+    time.sleep(1)
