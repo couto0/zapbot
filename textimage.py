@@ -50,12 +50,7 @@ def make_image(img_path, msg, output_path):
     new_image.paste(text_img, (0, 0))
     new_image.paste(img_resized,(0, text_img.size[1]))
     new_image.save(output_path)
-    plt.imshow(new_image)
-    plt.show()
-
-
-
-    #plt.imshow(img_resized)
+    #plt.imshow(new_image)
     #plt.show()
 
 
