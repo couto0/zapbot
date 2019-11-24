@@ -8,7 +8,8 @@ from selenium.webdriver.common.keys import Keys
 import personal
 import time
 import json
-
+import os
+import randimage
 
 headless = False
 firefox_profile_dir = personal.firefox_profile_dir
@@ -16,6 +17,8 @@ msgbox_class = personal.msgbox_class
 chat_title_class = personal.chat_title_class
 chat_search_class = personal.chat_search_class
 send_button_class = personal.send_button_class
+send_button_image_class = personal.send_button_image_class
+contact_name = personal.contact_name
 msg_class = personal.msg_class
 
 help_msg = ['Comandos disponíveis:',
@@ -24,7 +27,8 @@ help_msg = ['Comandos disponíveis:',
             '*/mem _LEMBRETE_*: adiciona um lembrete',
             '*/role _NOME DO ROLE_*: configura o role atual',
             '*/confirmado*: mostra os confirmados no role',
-            '*/confirmado _NOME_*: confirma o nome no role']
+            '*/confirmado _NOME_*: confirma o nome no role',
+            '*/imagem*: envia uma imagem']
 
 def send_msg(msg):
     msg_box = driver.find_element_by_class_name(msgbox_class)
@@ -41,6 +45,18 @@ def read_last_message():
     last = len(messages) - 1
     msg_text = messages[last].find_element_by_css_selector('span.selectable-text').text
     return msg_text
+
+def send_img():
+    msg_box = driver.find_element_by_class_name(msgbox_class)
+    home_dir = os.path.dirname(os.path.realpath(__file__))
+    memes_dir = os.path.join(home_dir, 'Memes')
+    img_dir = os.path.join(memes_dir, randimage.generate())
+    os.system('xclip -selection clipboard -t image/png -i {}'.format(img_dir))
+    time.sleep(1)
+    msg_box.send_keys('hmm', Keys.CONTROL, 'v')
+    time.sleep(2)
+    send_button_image = driver.find_element_by_class_name(send_button_image_class)
+    send_button_image.click()
 
 def read_json(fname):
     try:
@@ -95,7 +111,6 @@ while not pageLoaded:
 
 side_panel = driver.find_element_by_id('side')
 
-contact_name='zapbot5000'
 searchbox.send_keys(contact_name)
 time.sleep(2)
 contact = driver.find_element_by_xpath('//span[@title = "{}"]'.format(contact_name))
@@ -103,10 +118,11 @@ contact.click()
 time.sleep(2)
 
 print('Iniciado!')
-send_msg('*começou o ataque do bot*')
-send_msg('/help para ver os comandos disponíveis')
+#send_msg('/help para ver os comandos disponíveis')
 role = ''
 last_msg = ''
+send_msg('*começou o ataque dos bot loko*')
+send_msg('/help para ajuda')
 while 1:
     try:
         last_msg = read_last_message()
@@ -128,12 +144,8 @@ while 1:
             send_msg('o role do momento é *_{}_*'.format(role.upper()))
         if cmd == '/confirmado':
             memorize(role, data)
-        if cmd == '/send':
-            clip = driver.find_element_by_css_selector("span[data-icon='clip']")
-            clip.click()
-            image = driver.find_element_by_css_selector("input[type='image']")
-            image.sendKeys("/home/couto0/Imagens/hardmob.png\n");
-            #driver.findElement_by_cssSelector("span[data-icon='send-light']").click();
+        if cmd == '/imagem':
+            send_img()
 
     if last_msg[-1] == '?':
         if len(last_msg)%2:

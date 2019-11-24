@@ -2,3 +2,5 @@ personal.py
 *.log
 *.json
 __pycache__/*
+*.png
+log
