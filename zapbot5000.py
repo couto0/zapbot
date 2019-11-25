@@ -121,8 +121,8 @@ print('Iniciado!')
 #send_msg('/help para ver os comandos disponíveis')
 role = ''
 last_msg = ''
-send_msg('*começou o ataque dos bot loko*')
-send_msg('/help para ajuda')
+#send_msg('*começou o ataque dos bot loko*')
+#send_msg('/help para ajuda')
 while 1:
     try:
         last_msg = read_last_message()

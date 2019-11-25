@@ -109,5 +109,3 @@ def generate():
     # Saves meme
     meme.save(os.path.join(memes_dir, filename))
     return filename
-
-print(memerand())
